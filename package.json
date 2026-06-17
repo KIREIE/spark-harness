@@ -1,16 +1,17 @@
 {
   "name": "spark-harness",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "license": "MIT",
   "files": [
-    "src",
+    "dist",
     "docs",
     ".codex",
     "AGENTS.md",
     "README.md",
     "harness.config.json",
+    "package-lock.json",
     "package.json"
   ],
   "engines": {
@@ -21,14 +22,19 @@
     "url": "https://github.com/KIREIE/spark-harness.git"
   },
   "bin": {
-    "spark-harness": "./src/cli.mjs"
+    "spark-harness": "./dist/cli.cjs"
   },
   "scripts": {
+    "build": "node scripts/build.mjs",
+    "prepack": "npm run build",
     "init": "node src/cli.mjs init",
     "sync": "node src/cli.mjs sync",
     "check": "node src/cli.mjs check",
     "run": "node src/cli.mjs run",
     "backwrite": "node src/cli.mjs backwrite",
     "doctor": "node src/cli.mjs doctor"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
   }
 }

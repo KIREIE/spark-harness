@@ -4,7 +4,7 @@ import { initProject, syncProject, checkProject, runProject, backwriteProject, d
 const [command = 'help', ...rest] = process.argv.slice(2)
 const root = process.cwd()
 
-try {
+async function main() {
   switch (command) {
     case 'init':
       await initProject(root, parseFlags(rest))
@@ -28,10 +28,12 @@ try {
       printHelp()
       process.exitCode = 1
   }
-} catch (error) {
+}
+
+main().catch((error) => {
   console.error(error?.stack || error?.message || String(error))
   process.exitCode = 1
-}
+})
 
 function parseFlags(args) {
   const flags = { _: [] }
