@@ -8,7 +8,6 @@
     "flowKitDir": "docs/flow-kit",
     "skillsDir": ".codex/skills"
   },
-  "sources": [],
   "wiki": {
     "bundleTitle": "LLM Wiki Harness",
     "bundleDescription": "OKF 风格的 raw -> wiki -> flow-kit -> backwrite 流程"

@@ -31,9 +31,9 @@ spark-harness doctor
 
 ```bash
 spark-harness init
-spark-harness sync
+spark-harness sync --source <feishu-url> [--source <feishu-url> ...]
 spark-harness check
-spark-harness run
+spark-harness run --source <feishu-url> [--source <feishu-url> ...]
 spark-harness backwrite
 spark-harness doctor
 ```
@@ -59,7 +59,12 @@ CLI 会默认以当前工作目录为工程根目录，读取：
 
 ## 配置
 
-编辑 `harness.config.json`，把 `sources` 换成你的 Feishu 链接列表即可。
+`harness.config.json` 只放静态配置，比如路径、bundle 名称、执行后端。
+Feishu 链接不预先写进配置，执行时直接通过 `sync` / `run` 传入：
+
+```bash
+spark-harness sync --source <feishu-url> --source <feishu-url>
+```
 
 ## 默认状态
 

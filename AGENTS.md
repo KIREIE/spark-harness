@@ -3,10 +3,11 @@
 ## 工作顺序
 
 1. 先读 `harness.config.json`
-2. 再读 `docs/raw/feishu/`
-3. 再读 `docs/llm-wiki/`
-4. 再读 `docs/flow-kit/`
-5. 最后再做回写
+2. 再接收本次聊天里的 Feishu 链接参数
+3. 再读 `docs/raw/feishu/`
+4. 再读 `docs/llm-wiki/`
+5. 再读 `docs/flow-kit/`
+6. 最后再做回写
 
 ## LazyCodex 执行层
 

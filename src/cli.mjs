@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { loadConfig, initProject, syncProject, checkProject, runProject, backwriteProject, doctorProject } from './lib/harness.mjs'
+import { initProject, syncProject, checkProject, runProject, backwriteProject, doctorProject } from './lib/harness.mjs'
 
 const [command = 'help', ...rest] = process.argv.slice(2)
 const root = process.cwd()
@@ -34,14 +34,21 @@ try {
 }
 
 function parseFlags(args) {
-  const flags = {}
+  const flags = { _: [] }
   for (let i = 0; i < args.length; i += 1) {
     const arg = args[i]
-    if (!arg.startsWith('--')) continue
+    if (!arg.startsWith('--')) {
+      flags._.push(arg)
+      continue
+    }
     const key = arg.slice(2)
     const next = args[i + 1]
     if (next && !next.startsWith('--')) {
-      flags[key] = next
+      if (Object.hasOwn(flags, key)) {
+        flags[key] = Array.isArray(flags[key]) ? [...flags[key], next] : [flags[key], next]
+      } else {
+        flags[key] = next
+      }
       i += 1
     } else {
       flags[key] = true
@@ -55,9 +62,9 @@ function printHelp() {
 
 usage:
   spark-harness init
-  spark-harness sync
+  spark-harness sync --source <feishu-url> [--source <feishu-url> ...]
   spark-harness check
-  spark-harness run
+  spark-harness run --source <feishu-url> [--source <feishu-url> ...]
   spark-harness backwrite
   spark-harness doctor`)
 }
