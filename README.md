@@ -1,30 +1,60 @@
 # spark-harness
 
-通用 LLM Wiki Harness，用来把外部文档源接入成可维护的 `raw -> wiki -> flow-kit -> backwrite` 流程。
+通用 LLM Wiki Harness。它把外部文档源接成一个可重复使用的命令行流程：
 
-## 你可以拿它做什么
+`raw -> wiki -> flow-kit -> LazyCodex -> backwrite`
 
-- 喂 Feishu / Lark 链接
-- 自动生成原始留档
-- 自动维护整理后的 wiki
-- 自动拆分任务、测试用例和交接包
-- 自动生成回写材料和可复用 skill
+## 安装
 
-## 运行方式
+### 直接用 GitHub 仓库
 
 ```bash
-npm run init
-npm run sync
-npm run check
-npm run run
-npm run backwrite
+git clone https://github.com/KIREIE/spark-harness.git
+cd spark-harness
+npm install
 ```
+
+### 作为 CLI 使用
+
+```bash
+npx github:KIREIE/spark-harness doctor
+```
+
+或者全局安装：
+
+```bash
+npm install -g github:KIREIE/spark-harness
+spark-harness doctor
+```
+
+## 命令
+
+```bash
+spark-harness init
+spark-harness sync
+spark-harness check
+spark-harness run
+spark-harness backwrite
+spark-harness doctor
+```
+
+## 怎么接入别的项目
+
+把仓库放到目标工程根目录，或者在目标工程里通过 `npx` / 全局命令运行。
+CLI 会默认以当前工作目录为工程根目录，读取：
+
+- `harness.config.json`
+- `docs/raw/feishu/`
+- `docs/llm-wiki/`
+- `docs/flow-kit/`
+- `.codex/skills/`
 
 ## 目录约定
 
 - `docs/raw/feishu/`：原始留档
 - `docs/llm-wiki/`：整理后的 wiki
 - `docs/flow-kit/`：任务、验证、交接
+- `docs/flow-kit/lazycodex/`：LazyCodex 执行层
 - `.codex/skills/`：项目级 skill
 
 ## 配置
@@ -34,3 +64,9 @@ npm run backwrite
 ## 默认状态
 
 仓库默认不绑定任何业务样例。`sync` 在空配置下也能生成通用模板。
+
+## CI / Release
+
+- `push` 到 `main` 会跑 CI
+- `pull request` 会跑 CI
+- 打 `v*` tag 会触发 GitHub Release，并附上 `npm pack` 产物
