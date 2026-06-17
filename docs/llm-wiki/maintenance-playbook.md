@@ -1,7 +1,7 @@
 ---
 type: "concept"
 title: "Maintenance Playbook"
-updated_at: "2026-06-17T09:49:29.902Z"
+updated_at: "2026-06-17T10:03:01.383Z"
 status: "curated"
 tags: ["maintenance", "workflow"]
 refs: ["./source-ledger.md"]

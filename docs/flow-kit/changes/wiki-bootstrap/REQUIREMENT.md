@@ -1,7 +1,7 @@
 ---
 type: "requirement"
 title: "wiki-bootstrap 需求"
-updated_at: "2026-06-17T09:49:29.906Z"
+updated_at: "2026-06-17T10:03:01.389Z"
 status: "active"
 tags: ["requirement", "wiki", "flow-kit"]
 refs: ["./CHANGE.md"]

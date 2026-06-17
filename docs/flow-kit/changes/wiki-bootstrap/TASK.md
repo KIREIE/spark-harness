@@ -1,7 +1,7 @@
 ---
 type: "task"
 title: "wiki-bootstrap 任务"
-updated_at: "2026-06-17T09:49:29.907Z"
+updated_at: "2026-06-17T10:03:01.390Z"
 status: "active"
 tags: ["task", "flow-kit", "agents"]
 refs: ["./DESIGN.md"]

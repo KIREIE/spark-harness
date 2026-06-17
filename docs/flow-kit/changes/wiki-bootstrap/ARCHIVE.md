@@ -1,7 +1,7 @@
 ---
 type: "archive"
 title: "wiki-bootstrap 归档"
-updated_at: "2026-06-17T09:49:29.909Z"
+updated_at: "2026-06-17T10:03:01.392Z"
 status: "active"
 tags: ["archive", "flow-kit"]
 refs: ["./INTEGRATION.md"]

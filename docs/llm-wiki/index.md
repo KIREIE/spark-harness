@@ -1,7 +1,7 @@
 ---
 type: "bundle-index"
 title: "LLM Wiki Harness"
-updated_at: "2026-06-17T09:49:29.899Z"
+updated_at: "2026-06-17T10:03:01.380Z"
 status: "curated"
 tags: ["wiki", "okf", "harness"]
 refs: ["./source-ledger.md", "./bundle-spec.md", "./maintenance-playbook.md", "./experience-backwrite.md"]

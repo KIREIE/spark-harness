@@ -108,6 +108,7 @@ export async function checkProject(root, flags = {}) {
     'METHODOLOGY.md',
     'RULES.md',
     'CONTEXT.md',
+    'lazycodex/EXECUTION.md',
     'changes/wiki-bootstrap/CHANGE.md',
     'changes/wiki-bootstrap/REQUIREMENT.md',
     'changes/wiki-bootstrap/DESIGN.md',
@@ -326,9 +327,9 @@ async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['flow-kit', 'wiki', 'agents'],
-      refs: ['./GO.md', './METHODOLOGY.md', './RULES.md', './CONTEXT.md', './lazycodex/HANDOFF.md', './changes/wiki-bootstrap/CHANGE.md'],
+      refs: ['./GO.md', './METHODOLOGY.md', './RULES.md', './CONTEXT.md', './lazycodex/EXECUTION.md', './lazycodex/HANDOFF.md', './changes/wiki-bootstrap/CHANGE.md'],
     }) +
-      `# Flow Kit 索引\n\n- [GO](./GO.md)\n- [方法论](./METHODOLOGY.md)\n- [规则](./RULES.md)\n- [上下文](./CONTEXT.md)\n- [LazyCodex 交接](./lazycodex/HANDOFF.md)\n- [变更](./changes/wiki-bootstrap/CHANGE.md)\n`,
+      `# Flow Kit 索引\n\n- [GO](./GO.md)\n- [方法论](./METHODOLOGY.md)\n- [规则](./RULES.md)\n- [上下文](./CONTEXT.md)\n- [LazyCodex 执行](./lazycodex/EXECUTION.md)\n- [LazyCodex 交接](./lazycodex/HANDOFF.md)\n- [变更](./changes/wiki-bootstrap/CHANGE.md)\n`,
     'utf8',
   )
 
@@ -342,7 +343,7 @@ async function writeFlowKit(root, config, fetchedSources) {
       tags: ['flow-kit', 'entrypoint', 'agents'],
       refs: ['./METHODOLOGY.md', './RULES.md', './CONTEXT.md', './changes/wiki-bootstrap/CHANGE.md', './changes/wiki-bootstrap/VERIFY.md', './lazycodex/HANDOFF.md'],
     }) +
-      `# GO\n\n1. 读 wiki。\n2. 拆 flow-kit 任务。\n3. 生成测试用例。\n4. 交给 subagent。\n5. 回写 report 和 skill。\n`,
+      `# GO\n\n1. 读 wiki。\n2. 先看 LazyCodex 执行层。\n3. 再读 handoff。\n4. 拆 flow-kit 任务。\n5. 生成测试用例。\n6. 交给 subagent。\n7. 回写 report 和 skill。\n`,
     'utf8',
   )
 
@@ -382,7 +383,7 @@ async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['flow-kit', 'context', 'wiki'],
-      refs: ['./lazycodex/HANDOFF.md', './GO.md'].concat(wikiRefs),
+      refs: ['./lazycodex/EXECUTION.md', './lazycodex/HANDOFF.md', './GO.md'].concat(wikiRefs),
     }) +
       `# 上下文\n\n- 来源 bundle: ${fetchedSources.length} 份 Feishu 文档。\n- 当前任务面：wiki / flow-kit / skill / subagent。\n- 当前仓库默认只保留模板，不携带业务样例。\n`,
     'utf8',
@@ -495,9 +496,23 @@ async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['lazycodex', 'execution'],
-      refs: ['./HANDOFF.md'],
+      refs: ['./EXECUTION.md', './HANDOFF.md'],
     }) +
-      `# LazyCodex 说明\n\n把 handoff bundle 作为执行输入。\n`,
+      `# LazyCodex 说明\n\nLazyCodex 是 flow-kit 的执行层，负责把 handoff bundle 真正跑起来。\n`,
+    'utf8',
+  )
+
+  await writeFile(
+    path.join(flowKitDir, 'lazycodex', 'EXECUTION.md'),
+    stringifyFrontmatter({
+      type: 'lazycodex-execution',
+      title: 'LazyCodex 执行',
+      updated_at: new Date().toISOString(),
+      status: 'active',
+      tags: ['lazycodex', 'execution', 'agents'],
+      refs: ['./README.md', './HANDOFF.md', './REPORT.md'],
+    }) +
+      `# LazyCodex 执行\n\n1. 读取 handoff。\n2. 分发角色。\n3. 执行任务与验证。\n4. 写入 report。\n5. 回写稳定经验。\n`,
     'utf8',
   )
 
@@ -509,9 +524,9 @@ async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['lazycodex', 'execution', 'agents'],
-      refs: ['./README.md', '../GO.md', '../CONTEXT.md', '../changes/wiki-bootstrap/TASK.md'],
+      refs: ['./README.md', './EXECUTION.md', '../GO.md', '../CONTEXT.md', '../changes/wiki-bootstrap/TASK.md'],
     }) +
-      `# LazyCodex 交接\n\n## 目标\n\n- 构建并验证只读页面或 harness。\n- 用坐标式约束验证对话边界。\n\n## 分发角色\n\n- explorer\n- planner\n- tester\n- worker\n- reviewer\n\n## 测试用例\n\n${testCases}\n`,
+      `# LazyCodex 交接\n\n这个页面是执行输入，不是执行本身。真正的执行说明在 \`EXECUTION.md\`。\n\n## 目标\n\n- 构建并验证只读页面或 harness。\n- 用坐标式约束验证对话边界。\n\n## 分发角色\n\n- explorer\n- planner\n- tester\n- worker\n- reviewer\n\n## 测试用例\n\n${testCases}\n`,
     'utf8',
   )
 }
@@ -533,7 +548,7 @@ async function writeLazycodexReport(root, config, status) {
       ]
   const report = {
     objective: '通用 LLM Wiki Harness',
-    readOrder: ['AGENTS.md', 'harness.config.json', 'docs/llm-wiki/index.md', 'docs/flow-kit/GO.md', 'docs/flow-kit/lazycodex/HANDOFF.md'],
+    readOrder: ['AGENTS.md', 'harness.config.json', 'docs/llm-wiki/index.md', 'docs/flow-kit/GO.md', 'docs/flow-kit/lazycodex/EXECUTION.md', 'docs/flow-kit/lazycodex/HANDOFF.md'],
     dispatch: config.agents.roles.map((role, index) => ({
       role,
       agentId: `demo-${index + 1}`,
@@ -557,7 +572,7 @@ async function writeLazycodexReport(root, config, status) {
       updated_at: new Date().toISOString(),
       status,
       tags: ['lazycodex', 'execution', 'report'],
-      refs: ['./HANDOFF.md', '../../llm-wiki/index.md'],
+      refs: ['./EXECUTION.md', './HANDOFF.md', '../../llm-wiki/index.md'],
     }) +
       `# LazyCodex Dispatch Report\n\n## Status\n\n${status}\n\n## Test cases\n\n${report.testCases.map((item) => `- ${item.name}: ${item.scenario}`).join('\n')}\n`,
     'utf8',

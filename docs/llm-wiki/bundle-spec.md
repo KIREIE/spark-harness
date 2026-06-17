@@ -1,7 +1,7 @@
 ---
 type: "concept"
 title: "Bundle Spec"
-updated_at: "2026-06-17T09:49:29.901Z"
+updated_at: "2026-06-17T10:03:01.383Z"
 status: "curated"
 tags: ["okf", "structure", "spec"]
 refs: ["./source-ledger.md"]

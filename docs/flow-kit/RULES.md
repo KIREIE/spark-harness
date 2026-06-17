@@ -1,7 +1,7 @@
 ---
 type: "flow-kit-rules"
 title: "规则"
-updated_at: "2026-06-17T09:49:29.904Z"
+updated_at: "2026-06-17T10:03:01.387Z"
 status: "active"
 tags: ["flow-kit", "rules"]
 refs: ["./GO.md"]

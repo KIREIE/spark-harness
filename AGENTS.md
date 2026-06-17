@@ -8,6 +8,10 @@
 4. 再读 `docs/flow-kit/`
 5. 最后再做回写
 
+## LazyCodex 执行层
+
+涉及 `docs/flow-kit/lazycodex/` 时，优先读 `EXECUTION.md`，再读 `HANDOFF.md`，最后看 `REPORT.md`。
+
 ## 维护约定
 
 - raw 只做原始留档。

@@ -1,7 +1,7 @@
 ---
 type: "integration"
 title: "wiki-bootstrap 集成"
-updated_at: "2026-06-17T09:49:29.908Z"
+updated_at: "2026-06-17T10:03:01.391Z"
 status: "active"
 tags: ["integration", "flow-kit"]
 refs: ["./VERIFY.md"]

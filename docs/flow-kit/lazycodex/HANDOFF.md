@@ -1,12 +1,14 @@
 ---
 type: "lazycodex-handoff"
 title: "LazyCodex 交接"
-updated_at: "2026-06-17T09:49:29.910Z"
+updated_at: "2026-06-17T10:03:01.394Z"
 status: "active"
 tags: ["lazycodex", "execution", "agents"]
-refs: ["./README.md", "../GO.md", "../CONTEXT.md", "../changes/wiki-bootstrap/TASK.md"]
+refs: ["./README.md", "./EXECUTION.md", "../GO.md", "../CONTEXT.md", "../changes/wiki-bootstrap/TASK.md"]
 ---
 # LazyCodex 交接
+
+这个页面是执行输入，不是执行本身。真正的执行说明在 `EXECUTION.md`。
 
 ## 目标
 

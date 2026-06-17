@@ -1,7 +1,7 @@
 ---
 type: "concept"
 title: "Source Ledger"
-updated_at: "2026-06-17T09:49:29.901Z"
+updated_at: "2026-06-17T10:03:01.382Z"
 status: "curated"
 tags: ["sources", "provenance"]
 refs: ["./bundle-spec.md"]
