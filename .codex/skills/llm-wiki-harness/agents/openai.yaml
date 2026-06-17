@@ -1,0 +1,4 @@
+interface:
+  display_name: "LLM Wiki Harness"
+  short_description: "Feishu-fed wiki harness and task pipeline"
+  default_prompt: "Use $llm-wiki-harness to ingest Feishu docs, maintain the wiki, split flow-kit tasks, and generate reports."

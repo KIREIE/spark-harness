@@ -1,0 +1,6 @@
+node_modules
+dist
+.DS_Store
+docs/flow-kit/lazycodex/REPORT.json
+docs/flow-kit/lazycodex/REPORT.md
+docs/**/.generated

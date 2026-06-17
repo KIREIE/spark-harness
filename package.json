@@ -1,0 +1,17 @@
+{
+  "name": "spark-harness",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "bin": {
+    "spark-harness": "./src/cli.mjs"
+  },
+  "scripts": {
+    "init": "node src/cli.mjs init",
+    "sync": "node src/cli.mjs sync",
+    "check": "node src/cli.mjs check",
+    "run": "node src/cli.mjs run",
+    "backwrite": "node src/cli.mjs backwrite",
+    "doctor": "node src/cli.mjs doctor"
+  }
+}

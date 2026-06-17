@@ -1,0 +1,4 @@
+interface:
+  display_name: "LLM Wiki Backwrite"
+  short_description: "Promote stable harness experience into docs and skills"
+  default_prompt: "Use $llm-wiki-backwrite to turn validated harness experience into wiki, flow-kit, or skill updates."

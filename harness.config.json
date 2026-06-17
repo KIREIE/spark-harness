@@ -1,0 +1,19 @@
+{
+  "projectName": "spark-harness",
+  "sourceAdapter": "lark-cli",
+  "executionBackend": "demo",
+  "paths": {
+    "rawDir": "docs/raw/feishu",
+    "wikiDir": "docs/llm-wiki",
+    "flowKitDir": "docs/flow-kit",
+    "skillsDir": ".codex/skills"
+  },
+  "sources": [],
+  "wiki": {
+    "bundleTitle": "LLM Wiki Harness",
+    "bundleDescription": "OKF 风格的 raw -> wiki -> flow-kit -> backwrite 流程"
+  },
+  "agents": {
+    "roles": ["explorer", "planner", "tester", "worker", "reviewer"]
+  }
+}
