@@ -2,11 +2,13 @@ import { writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { stringifyFrontmatter } from './markdown.mjs'
 import { resolvePath } from './fs-utils.mjs'
+import { resolveExecutor } from './executor.mjs'
 
 export async function writeFlowKit(root, config, fetchedSources) {
   const flowKitDir = resolvePath(root, config.paths.flowKitDir)
+  const executor = resolveExecutor(config)
+  const executorDir = `./${executor.dir}`
   const wikiRefs = fetchedSources.map(({ source }) => `../llm-wiki/${source.id}.md`)
-  const rawRefs = fetchedSources.map(({ source }) => `../raw/feishu/${source.id}.md`)
   const taskLines = fetchedSources.length
     ? fetchedSources.map(({ source }) => `- ${source.id}: 从 raw 提取约束，生成对应任务和测试用例。`).join('\n')
     : '- 模板任务：接入外部 Feishu 源后再生成具体任务。'
@@ -23,9 +25,9 @@ export async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['flow-kit', 'wiki', 'agents'],
-      refs: ['./GO.md', './METHODOLOGY.md', './RULES.md', './CONTEXT.md', './lazycodex/EXECUTION.md', './lazycodex/HANDOFF.md', './changes/wiki-bootstrap/CHANGE.md'],
+      refs: ['./GO.md', './METHODOLOGY.md', './RULES.md', './CONTEXT.md', `${executorDir}/EXECUTION.md`, `${executorDir}/HANDOFF.md`, './changes/wiki-bootstrap/CHANGE.md'],
     }) +
-      `# Flow Kit 索引\n\n- [GO](./GO.md)\n- [方法论](./METHODOLOGY.md)\n- [规则](./RULES.md)\n- [上下文](./CONTEXT.md)\n- [LazyCodex 执行](./lazycodex/EXECUTION.md)\n- [LazyCodex 交接](./lazycodex/HANDOFF.md)\n- [变更](./changes/wiki-bootstrap/CHANGE.md)\n`,
+      `# Flow Kit 索引\n\n- [GO](./GO.md)\n- [方法论](./METHODOLOGY.md)\n- [规则](./RULES.md)\n- [上下文](./CONTEXT.md)\n- [${executor.label} 执行](${executorDir}/EXECUTION.md)\n- [${executor.label} 交接](${executorDir}/HANDOFF.md)\n- [变更](./changes/wiki-bootstrap/CHANGE.md)\n`,
     'utf8',
   )
 
@@ -37,9 +39,9 @@ export async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['flow-kit', 'entrypoint', 'agents'],
-      refs: ['./METHODOLOGY.md', './RULES.md', './CONTEXT.md', './changes/wiki-bootstrap/CHANGE.md', './changes/wiki-bootstrap/VERIFY.md', './lazycodex/HANDOFF.md'],
+      refs: ['./METHODOLOGY.md', './RULES.md', './CONTEXT.md', './changes/wiki-bootstrap/CHANGE.md', './changes/wiki-bootstrap/VERIFY.md', `${executorDir}/HANDOFF.md`],
     }) +
-      `# GO\n\n1. 读 wiki。\n2. 先看 LazyCodex 执行层。\n3. 再读 handoff。\n4. 拆 flow-kit 任务。\n5. 生成测试用例。\n6. 交给 subagent。\n7. 回写 report 和 skill。\n`,
+      `# GO\n\n1. 读 wiki。\n2. 读取当前 executor：${executor.label}。\n3. 再读 handoff。\n4. 拆 flow-kit 任务。\n5. 生成测试用例。\n6. 交给 subagent。\n7. 回写 report 和 skill。\n`,
     'utf8',
   )
 
@@ -79,9 +81,9 @@ export async function writeFlowKit(root, config, fetchedSources) {
       updated_at: new Date().toISOString(),
       status: 'active',
       tags: ['flow-kit', 'context', 'wiki'],
-      refs: ['./lazycodex/EXECUTION.md', './lazycodex/HANDOFF.md', './GO.md'].concat(wikiRefs),
+      refs: [`${executorDir}/EXECUTION.md`, `${executorDir}/HANDOFF.md`, './GO.md'].concat(wikiRefs),
     }) +
-      `# 上下文\n\n- 来源 bundle: ${fetchedSources.length} 份 Feishu 文档。\n- 当前任务面：wiki / flow-kit / skill / subagent。\n- 当前仓库默认只保留模板，不携带业务样例。\n`,
+      `# 上下文\n\n- 来源 bundle: ${fetchedSources.length} 份 Feishu 文档。\n- 当前任务面：wiki / flow-kit / skill / subagent。\n- 当前 executor：${executor.label}。\n- 当前仓库默认只保留模板，不携带业务样例。\n`,
     'utf8',
   )
 
@@ -185,44 +187,44 @@ export async function writeFlowKit(root, config, fetchedSources) {
   )
 
   await writeFile(
-    path.join(flowKitDir, 'lazycodex', 'README.md'),
+    path.join(flowKitDir, executor.dir, 'README.md'),
     stringifyFrontmatter({
-      type: 'lazycodex-readme',
-      title: 'LazyCodex 说明',
+      type: `${executor.typePrefix}-readme`,
+      title: executor.readmeTitle,
       updated_at: new Date().toISOString(),
       status: 'active',
-      tags: ['lazycodex', 'execution'],
+      tags: [executor.id, 'execution'],
       refs: ['./EXECUTION.md', './HANDOFF.md'],
     }) +
-      `# LazyCodex 说明\n\nLazyCodex 是 flow-kit 的执行层，负责把 handoff bundle 真正跑起来。\n`,
+      `# ${executor.readmeTitle}\n\n${executor.description}\n`,
     'utf8',
   )
 
   await writeFile(
-    path.join(flowKitDir, 'lazycodex', 'EXECUTION.md'),
+    path.join(flowKitDir, executor.dir, 'EXECUTION.md'),
     stringifyFrontmatter({
-      type: 'lazycodex-execution',
-      title: 'LazyCodex 执行',
+      type: `${executor.typePrefix}-execution`,
+      title: executor.executionTitle,
       updated_at: new Date().toISOString(),
       status: 'active',
-      tags: ['lazycodex', 'execution', 'agents'],
+      tags: [executor.id, 'execution', 'agents'],
       refs: ['./README.md', './HANDOFF.md', './REPORT.md'],
     }) +
-      `# LazyCodex 执行\n\n1. 读取 handoff。\n2. 分发角色。\n3. 执行任务与验证。\n4. 写入 report。\n5. 回写稳定经验。\n`,
+      `# ${executor.executionTitle}\n\n1. 读取 handoff。\n2. 分发角色。\n3. 执行任务与验证。\n4. 写入 report。\n5. 回写稳定经验。\n`,
     'utf8',
   )
 
   await writeFile(
-    path.join(flowKitDir, 'lazycodex', 'HANDOFF.md'),
+    path.join(flowKitDir, executor.dir, 'HANDOFF.md'),
     stringifyFrontmatter({
-      type: 'lazycodex-handoff',
-      title: 'LazyCodex 交接',
+      type: `${executor.typePrefix}-handoff`,
+      title: executor.handoffTitle,
       updated_at: new Date().toISOString(),
       status: 'active',
-      tags: ['lazycodex', 'execution', 'agents'],
+      tags: [executor.id, 'execution', 'agents'],
       refs: ['./README.md', './EXECUTION.md', '../GO.md', '../CONTEXT.md', '../changes/wiki-bootstrap/TASK.md'],
     }) +
-      `# LazyCodex 交接\n\n这个页面是执行输入，不是执行本身。真正的执行说明在 \`EXECUTION.md\`。\n\n## 目标\n\n- 构建并验证只读页面或 harness。\n- 用坐标式约束验证对话边界。\n\n## 分发角色\n\n- explorer\n- planner\n- tester\n- worker\n- reviewer\n\n## 测试用例\n\n${testCases}\n`,
+      `# ${executor.handoffTitle}\n\n这个页面是执行输入，不是执行本身。真正的执行说明在 \`EXECUTION.md\`。\n\n## 目标\n\n- 构建并验证只读页面或 harness。\n- 用坐标式约束验证对话边界。\n\n## 分发角色\n\n- explorer\n- planner\n- tester\n- worker\n- reviewer\n\n## 测试用例\n\n${testCases}\n`,
     'utf8',
   )
 }

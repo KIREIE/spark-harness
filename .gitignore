@@ -3,4 +3,6 @@ dist
 .DS_Store
 docs/flow-kit/lazycodex/REPORT.json
 docs/flow-kit/lazycodex/REPORT.md
+docs/flow-kit/comet/REPORT.json
+docs/flow-kit/comet/REPORT.md
 docs/**/.generated

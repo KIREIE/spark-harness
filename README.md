@@ -2,7 +2,7 @@
 
 通用 LLM Wiki Harness。它把外部文档源接成一个可重复使用的命令行流程：
 
-`raw -> wiki -> flow-kit -> LazyCodex -> backwrite`
+`raw -> wiki -> flow-kit -> executor -> backwrite`
 
 ## 安装
 
@@ -54,7 +54,7 @@ CLI 会默认以当前工作目录为工程根目录，读取：
 - `docs/raw/feishu/`：原始留档
 - `docs/llm-wiki/`：整理后的 wiki
 - `docs/flow-kit/`：任务、验证、交接
-- `docs/flow-kit/lazycodex/`：LazyCodex 执行层
+- `docs/flow-kit/<executor>/`：可替换执行层，默认 `lazycodex`，可配置为 `comet`
 - `.codex/skills/`：项目级 skill
 
 ## 配置
@@ -64,6 +64,16 @@ Feishu 链接不预先写进配置，执行时直接通过 `sync` / `run` 传入
 
 ```bash
 spark-harness sync --source <feishu-url> --source <feishu-url>
+```
+
+执行层默认是 LazyCodex；要切到 Comet，改配置即可：
+
+```json
+{
+  "executor": {
+    "backend": "comet"
+  }
+}
 ```
 
 ## 默认状态

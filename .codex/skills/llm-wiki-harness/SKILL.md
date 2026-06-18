@@ -17,5 +17,5 @@ description: "Operate a Feishu-fed OKF-style wiki harness. Use when a project ne
 - raw 留档
 - wiki 概念页
 - flow-kit 任务和测试用例
-- lazycodex handoff/report
+- executor handoff/report
 - backwrite skill

@@ -9,9 +9,10 @@
 5. 再读 `docs/flow-kit/`
 6. 最后再做回写
 
-## LazyCodex 执行层
+## Executor 执行层
 
-涉及 `docs/flow-kit/lazycodex/` 时，优先读 `EXECUTION.md`，再读 `HANDOFF.md`，最后看 `REPORT.md`。
+执行层由 `harness.config.json` 的 `executor.backend` 决定，默认 `lazycodex`，也可以切换为 `comet`。
+涉及 `docs/flow-kit/<executor>/` 时，优先读 `EXECUTION.md`，再读 `HANDOFF.md`，最后看 `REPORT.md`。
 
 ## 维护约定
 
@@ -24,4 +25,4 @@
 
 ## 默认执行链
 
-`llm wiki` 读取 -> `flow-kit` 拆解 -> `subagent` 分发 -> `LazyCodex` 执行 -> 回写 `wiki / skill / flow-kit` -> 输出完整修改报告
+`llm wiki` 读取 -> `flow-kit` 拆解 -> `subagent` 分发 -> 当前 `executor` 执行 -> 回写 `wiki / skill / flow-kit` -> 输出完整修改报告

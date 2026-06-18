@@ -4,7 +4,10 @@ import { readOptional } from './fs-utils.mjs'
 export const defaultConfig = {
   projectName: 'spark-harness',
   sourceAdapter: 'lark-cli',
-  executionBackend: 'demo',
+  executionBackend: 'lazycodex',
+  executor: {
+    backend: 'lazycodex',
+  },
   paths: {
     rawDir: 'docs/raw/feishu',
     wikiDir: 'docs/llm-wiki',
@@ -37,6 +40,7 @@ export function mergeConfig(base, input) {
     paths: inputPaths = {},
     wiki: inputWiki = {},
     agents: inputAgents = {},
+    executor: inputExecutor = {},
     ...rest
   } = input
   return {
@@ -45,5 +49,6 @@ export function mergeConfig(base, input) {
     paths: { ...base.paths, ...inputPaths },
     wiki: { ...base.wiki, ...inputWiki },
     agents: { ...base.agents, ...inputAgents },
+    executor: { ...base.executor, ...inputExecutor },
   }
 }

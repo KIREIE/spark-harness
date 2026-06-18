@@ -158,7 +158,7 @@ export async function writeSkills(root, config) {
       name: 'llm-wiki-harness',
       description: 'Operate a Feishu-fed OKF-style wiki harness. Use when a project needs to ingest Feishu docs, generate raw留档, maintain llm wiki, split flow-kit tasks, produce test cases, and hand off to subagents for execution.',
     }) +
-      `# LLM Wiki Harness\n\n## Read order\n\n1. AGENTS.md\n2. harness.config.json\n3. docs/raw/feishu/\n4. docs/llm-wiki/\n5. docs/flow-kit/\n\n## Output contract\n\n- raw 留档\n- wiki 概念页\n- flow-kit 任务和测试用例\n- lazycodex handoff/report\n- backwrite skill\n`,
+      `# LLM Wiki Harness\n\n## Read order\n\n1. AGENTS.md\n2. harness.config.json\n3. docs/raw/feishu/\n4. docs/llm-wiki/\n5. docs/flow-kit/\n\n## Output contract\n\n- raw 留档\n- wiki 概念页\n- flow-kit 任务和测试用例\n- executor handoff/report\n- backwrite skill\n`,
     'utf8',
   )
 

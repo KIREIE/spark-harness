@@ -6,7 +6,8 @@ import { collectRuntimeSourceUrls, fetchRuntimeSources, listRecordedSources } fr
 import { parseFrontmatter } from './markdown.mjs'
 import { writeSkillTemplate, writeSkills, writeSyncManifest, writeWikiBundle, writeCuratedPage, writeRawDoc } from './wiki-artifacts.mjs'
 import { writeFlowKit as writeFlowKitArtifacts, writeExperienceBackwrite } from './flowkit-artifacts.mjs'
-import { writeLazycodexReport } from './lazycodex-report.mjs'
+import { writeExecutorReport } from './executor-report.mjs'
+import { resolveExecutor } from './executor.mjs'
 
 export async function initProject(root, flags = {}) {
   const configPath = path.join(root, 'harness.config.json')
@@ -45,6 +46,7 @@ export async function checkProject(root, flags = {}) {
   const rawDir = resolvePath(root, config.paths.rawDir)
   const wikiDir = resolvePath(root, config.paths.wikiDir)
   const flowKitDir = resolvePath(root, config.paths.flowKitDir)
+  const executor = resolveExecutor(config)
 
   await requireFile(root, 'AGENTS.md', problems)
   await requireFile(root, 'harness.config.json', problems)
@@ -86,7 +88,7 @@ export async function checkProject(root, flags = {}) {
     'METHODOLOGY.md',
     'RULES.md',
     'CONTEXT.md',
-    'lazycodex/EXECUTION.md',
+    `${executor.dir}/EXECUTION.md`,
     'changes/wiki-bootstrap/CHANGE.md',
     'changes/wiki-bootstrap/REQUIREMENT.md',
     'changes/wiki-bootstrap/DESIGN.md',
@@ -94,22 +96,22 @@ export async function checkProject(root, flags = {}) {
     'changes/wiki-bootstrap/VERIFY.md',
     'changes/wiki-bootstrap/INTEGRATION.md',
     'changes/wiki-bootstrap/ARCHIVE.md',
-    'lazycodex/README.md',
-    'lazycodex/HANDOFF.md',
+    `${executor.dir}/README.md`,
+    `${executor.dir}/HANDOFF.md`,
   ]
   for (const file of requiredFlowFiles) {
     const relFile = path.join(config.paths.flowKitDir, file)
     const text = await readOptional(path.join(root, relFile))
     if (!text) problems.push(`missing flow-kit file: ${relFile}`)
-    else if (!/^---\n[\s\S]*?\n---\n/.test(text)) problems.push(`missing frontmatter: ${relFile}`)
+    else if (!/^---\r?\n[\s\S]*?\r?\n---\r?\n/.test(text)) problems.push(`missing frontmatter: ${relFile}`)
   }
 
-  const reportJson = await readOptional(path.join(flowKitDir, 'lazycodex', 'REPORT.json'))
+  const reportJson = await readOptional(path.join(flowKitDir, executor.dir, 'REPORT.json'))
   if (reportJson) {
     const report = JSON.parse(reportJson)
-    if (report.status !== 'live') problems.push('lazycodex report is not live')
-    if (!Array.isArray(report.testCases) || report.testCases.length === 0) problems.push('lazycodex report missing test cases')
-    if (!Array.isArray(report.dispatch) || report.dispatch.length === 0) problems.push('lazycodex report missing dispatch')
+    if (report.status !== 'live') problems.push(`${executor.id} report is not live`)
+    if (!Array.isArray(report.testCases) || report.testCases.length === 0) problems.push(`${executor.id} report missing test cases`)
+    if (!Array.isArray(report.dispatch) || report.dispatch.length === 0) problems.push(`${executor.id} report missing dispatch`)
     if (String(report.execution?.mode || '') === 'stub') problems.push('stub report cannot be treated as live')
   }
 
@@ -120,14 +122,15 @@ export async function checkProject(root, flags = {}) {
 export async function runProject(root, flags = {}) {
   const fetchedSources = await syncProject(root, flags)
   const config = await loadConfig(root, flags)
-  const report = await writeLazycodexReport(root, config, 'live', fetchedSources)
+  const report = await writeExecutorReport(root, config, 'live', fetchedSources)
   await checkProject(root, flags)
   console.log(`run complete (${report.execution.mode})`)
 }
 
 export async function backwriteProject(root, flags = {}) {
   const config = await loadConfig(root, flags)
-  const reportPath = path.join(root, config.paths.flowKitDir, 'lazycodex', 'REPORT.json')
+  const executor = resolveExecutor(config)
+  const reportPath = path.join(root, config.paths.flowKitDir, executor.dir, 'REPORT.json')
   const reportText = await readOptional(reportPath)
   if (!reportText) throw new Error('missing REPORT.json; run `spark-harness run` first')
   const report = JSON.parse(reportText)
@@ -138,15 +141,17 @@ export async function backwriteProject(root, flags = {}) {
 
 export async function doctorProject(root) {
   const config = await loadConfig(root)
-  console.log(JSON.stringify({ root, projectName: config.projectName, backend: config.executionBackend }, null, 2))
+  const executor = resolveExecutor(config)
+  console.log(JSON.stringify({ root, projectName: config.projectName, backend: executor.id }, null, 2))
 }
 
 async function scaffold(root, config) {
+  const executor = resolveExecutor(config)
   const dirs = [
     config.paths.rawDir,
     config.paths.wikiDir,
     config.paths.flowKitDir,
-    path.join(config.paths.flowKitDir, 'lazycodex'),
+    path.join(config.paths.flowKitDir, executor.dir),
     path.join(config.paths.flowKitDir, 'changes', 'wiki-bootstrap'),
     config.paths.skillsDir,
     path.join(config.paths.skillsDir, 'llm-wiki-harness'),

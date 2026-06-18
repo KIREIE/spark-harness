@@ -1,7 +1,10 @@
 {
   "projectName": "spark-harness",
   "sourceAdapter": "lark-cli",
-  "executionBackend": "demo",
+  "executionBackend": "lazycodex",
+  "executor": {
+    "backend": "lazycodex"
+  },
   "paths": {
     "rawDir": "docs/raw/feishu",
     "wikiDir": "docs/llm-wiki",
